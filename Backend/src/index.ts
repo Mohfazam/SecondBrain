@@ -1,6 +1,6 @@
 import { z } from "zod";
 import express from "express";
-import { jwt } from "jsonwebtoken";
+import  jwt  from "jsonwebtoken";
 
 const key = "Hello_second_brain";
 
@@ -41,19 +41,21 @@ app.post("/signup", (req, res) => {
     }
 });
 
-app.get("/login", (req, res) => {
+app.post("/login", (req, res) => {
     try{
         const {username, password} = req.body;
 
-    const userExist = users.some((user) => user.username = username, user.password = password);
+    const userExist = users.find((user) => user.username === username && user.password === password);
 
     if(!userExist){
         res.status(403).send({Message: "Wrong username or password"});
     }
 
-        const token = jwt.sign(username, key);
-        res.send(token);
-        res.status(200).send({Message: "Signin Successfull"});
+        const token = jwt.sign({username}, key);
+        res.status(200).send({
+            Message: "Signin Successfull",
+            token
+        });
     
     } catch(err){
         res.status(500).send({messaqge: "Internal server error"});
