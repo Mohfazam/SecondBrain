@@ -1,5 +1,6 @@
 import { z } from "zod";
 import express from "express";
+import mongoose from "mongoose"
 import  jwt  from "jsonwebtoken";
 
 const key = "Hello_second_brain";
@@ -18,7 +19,7 @@ const userSchema = z.object({
         )
 })
 
-app.post("/signup", (req, res) => {
+app.post("/api/v1/signup", (req, res) => {
     try{
         const {username, password} = userSchema.parse(req.body);
 
@@ -41,7 +42,7 @@ app.post("/signup", (req, res) => {
     }
 });
 
-app.post("/login", (req, res) => {
+app.post("/api/v1/login", (req, res) => {
     try{
         const {username, password} = req.body;
 
@@ -60,6 +61,19 @@ app.post("/login", (req, res) => {
     } catch(err){
         res.status(500).send({messaqge: "Internal server error"});
     }
+});
+
+
+app.post("/api/v1/content", (req, res)=> {
+
+});
+
+app.post("/api/v1/content", (req, res)=> {
+
+});
+
+app.get("/api/v1/secondbraib/:shareLink", (req, res)=> {
+
 });
 
 
