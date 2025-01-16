@@ -1,25 +1,28 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var zod_1 = require("zod");
-var express_1 = require("express");
-var jsonwebtoken_1 = require("jsonwebtoken");
-var key = "Hello_second_brain";
-var app = (0, express_1.default)();
+const zod_1 = require("zod");
+const express_1 = __importDefault(require("express"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const key = "Hello_second_brain";
+const app = (0, express_1.default)();
 app.use(express_1.default.json());
-var users = [];
-var userSchema = zod_1.z.object({
+const users = [];
+const userSchema = zod_1.z.object({
     username: zod_1.z.string().min(3, "Username should be more than 3 letters"),
     password: zod_1.z.string().min(8, "Password must be at least 8 characters long").max(20, "Password cannot exceed 20 characters").regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/, "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character")
 });
-app.post("/signup", function (req, res) {
+app.post("/signup", (req, res) => {
     try {
-        var _a = userSchema.parse(req.body), username_1 = _a.username, password = _a.password;
-        var userExist = users.some(function (users) { return users.username === username_1; });
+        const { username, password } = userSchema.parse(req.body);
+        const userExist = users.some((users) => users.username === username);
         if (userExist) {
             res.status(403).send({ Message: "User already exists with this username" });
         }
-        users.push({ username: username_1, password: password });
-        res.status(200).send({ Message: "Sign Up successfull", username: username_1, password: password });
+        users.push({ username, password });
+        res.status(200).send({ Message: "Sign Up successfull", username, password });
     }
     catch (err) {
         if (err instanceof zod_1.z.ZodError) {
@@ -30,17 +33,17 @@ app.post("/signup", function (req, res) {
         }
     }
 });
-app.post("/login", function (req, res) {
+app.post("/login", (req, res) => {
     try {
-        var _a = req.body, username_2 = _a.username, password_1 = _a.password;
-        var userExist = users.find(function (user) { return user.username === username_2 && user.password === password_1; });
+        const { username, password } = req.body;
+        const userExist = users.find((user) => user.username === username && user.password === password);
         if (!userExist) {
             res.status(403).send({ Message: "Wrong username or password" });
         }
-        var token = jsonwebtoken_1.default.sign({ username: username_2 }, key);
+        const token = jsonwebtoken_1.default.sign({ username }, key);
         res.status(200).send({
             Message: "Signin Successfull",
-            token: token
+            token
         });
     }
     catch (err) {
