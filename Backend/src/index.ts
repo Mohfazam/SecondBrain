@@ -2,6 +2,7 @@ import { z } from "zod";
 import express from "express";
 import mongoose from "mongoose"
 import  jwt  from "jsonwebtoken";
+import {UserModel} from "./db";
 
 const key = "Hello_second_brain";
 
@@ -19,48 +20,14 @@ const userSchema = z.object({
         )
 })
 
-app.post("/api/v1/signup", (req, res) => {
-    try{
-        const {username, password} = userSchema.parse(req.body);
-
-        const userExist = users.some((users) => users.username === username);
-
-        if(userExist){
-            res.status(403).send({Message:"User already exists with this username"});
-        }
-
-        users.push({username, password});
-
-        res.status(200).send({Message: "Sign Up successfull", username, password});
-    } catch(err){
-        if(err instanceof z.ZodError){
-            res.status(411).send({Message:" Error in inputs"});
-        }
-        else{
-            res.status(500).send({Message:"internal Server Error"});
-        }
-    }
+app.post("/api/v1/signup", async (req, res) => {
+    const username = userSchema.parse(req.body).username;
+    const password = userSchema.parse(req.body).password;
+    await UserModel.create({username, password})
 });
 
-app.post("/api/v1/login", (req, res) => {
-    try{
-        const {username, password} = req.body;
-
-    const userExist = users.find((user) => user.username === username && user.password === password);
-
-    if(!userExist){
-        res.status(403).send({Message: "Wrong username or password"});
-    }
-
-        const token = jwt.sign({username}, key);
-        res.status(200).send({
-            Message: "Signin Successfull",
-            token
-        });
+app.post("/api/v1/signin", (req, res) => {
     
-    } catch(err){
-        res.status(500).send({messaqge: "Internal server error"});
-    }
 });
 
 
@@ -73,6 +40,10 @@ app.post("/api/v1/content", (req, res)=> {
 });
 
 app.get("/api/v1/secondbraib/:shareLink", (req, res)=> {
+
+});
+
+app.delete("/api/v1/content", (req, res)=> {
 
 });
 
