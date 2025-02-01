@@ -4,9 +4,23 @@ import mongoose from "mongoose"
 import  jwt  from "jsonwebtoken";
 import {UserModel} from "./db";
 import bcrypt from "bcrypt";
+import e from "express";
+
+const env = require("dotenv").config();
+
+const MONGO_URL = process.env.MONGO_URL as string;
+
+mongoose.connect(MONGO_URL)
+  .then(() => {
+    console.log("Successfully connected to MongoDB");
+  })
+  .catch((error) => {
+    console.error("MongoDB connection error:", error);
+  });
 
 const key = "Hello_second_brain";
 
+// mongoose.connect(env)
 
 const app = express();
 
@@ -24,7 +38,8 @@ const userSchema = z.object({
 app.post("/api/v1/signup", async (req, res) => {
     try{
         const username = userSchema.parse(req.body).username;
-        if(users.find(user => user.username === username)){
+        const userExist = await UserModel.findOne({username});
+        if(userExist){
             res.status(411).json({Error: "username already exists"});
         }
         const password = userSchema.parse(req.body).password;
