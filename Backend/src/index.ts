@@ -44,15 +44,36 @@ app.post("/api/v1/signup", async (req, res) => {
         }
         const password = userSchema.parse(req.body).password;
         const hashedPassword = await bcrypt.hash(password, 10);
-        await UserModel.create({username, password});
+        await UserModel.create({username, password:hashedPassword});
     res.status(200).json({message: "User created Successfully"})
     }catch(error){
         res.status(400).json({error});
     }
 });
 
-app.post("/api/v1/signin", (req, res) => {
-    
+app.post("/api/v1/signin", async (req, res) => {
+    try{
+        const username = userSchema.parse(req.body).username;
+        const password = userSchema.parse(req.body).password;
+
+    const user = await UserModel.findOne({username});
+    if(!user){
+        res.status(404).json({Message:"User not found"});
+    }
+    if(user){
+        const isPasswordMatch = await bcrypt.compare(password, user.password);
+        if(isPasswordMatch){
+            res.status(200).json({Message:"User signed in successfulyy"});
+        }
+        else{
+            res.status(401).json({Message:"Incorrect Password"});
+        }
+    }
+    }
+    catch(error){
+        res.status(500).json({Msg:"Internal server error"});
+    }
+
 });
 
 
