@@ -44,15 +44,35 @@ app.post("/api/v1/signup", (req, res) => __awaiter(void 0, void 0, void 0, funct
         }
         const password = userSchema.parse(req.body).password;
         const hashedPassword = yield bcrypt_1.default.hash(password, 10);
-        yield db_1.UserModel.create({ username, password });
+        yield db_1.UserModel.create({ username, password: hashedPassword });
         res.status(200).json({ message: "User created Successfully" });
     }
     catch (error) {
         res.status(400).json({ error });
     }
 }));
-app.post("/api/v1/signin", (req, res) => {
-});
+app.post("/api/v1/signin", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const username = userSchema.parse(req.body).username;
+        const password = userSchema.parse(req.body).password;
+        const user = yield db_1.UserModel.findOne({ username });
+        if (!user) {
+            res.status(404).json({ Message: "User not found" });
+        }
+        if (user) {
+            const isPasswordMatch = yield bcrypt_1.default.compare(password, user.password);
+            if (isPasswordMatch) {
+                res.status(200).json({ Message: "User signed in successfulyy" });
+            }
+            else {
+                res.status(401).json({ Message: "Incorrect Password" });
+            }
+        }
+    }
+    catch (error) {
+        res.status(500).json({ Msg: "Internal server error" });
+    }
+}));
 app.post("/api/v1/content", (req, res) => {
 });
 app.post("/api/v1/content", (req, res) => {
