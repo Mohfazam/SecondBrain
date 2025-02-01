@@ -63,7 +63,11 @@ app.post("/api/v1/signin", async (req, res) => {
     if(user){
         const isPasswordMatch = await bcrypt.compare(password, user.password);
         if(isPasswordMatch){
-            res.status(200).json({Message:"User signed in successfulyy"});
+            const token = jwt.sign({username}, key);
+            res.status(200).json({
+                Message:"User signed in successfulyy",
+                token: token
+            });
         }
         else{
             res.status(401).json({Message:"Incorrect Password"});

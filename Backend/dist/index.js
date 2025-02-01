@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const zod_1 = require("zod");
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const db_1 = require("./db");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const env = require("dotenv").config();
@@ -62,7 +63,11 @@ app.post("/api/v1/signin", (req, res) => __awaiter(void 0, void 0, void 0, funct
         if (user) {
             const isPasswordMatch = yield bcrypt_1.default.compare(password, user.password);
             if (isPasswordMatch) {
-                res.status(200).json({ Message: "User signed in successfulyy" });
+                const token = jsonwebtoken_1.default.sign({ username }, key);
+                res.status(200).json({
+                    Message: "User signed in successfulyy",
+                    token: token
+                });
             }
             else {
                 res.status(401).json({ Message: "Incorrect Password" });
