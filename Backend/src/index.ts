@@ -4,7 +4,6 @@ import mongoose from "mongoose"
 import  jwt  from "jsonwebtoken";
 import {UserModel} from "./db";
 import bcrypt from "bcrypt";
-import e from "express";
 
 const env = require("dotenv").config();
 
@@ -97,5 +96,6 @@ app.delete("/api/v1/content", (req, res)=> {
 
 });
 
-
-app.listen(3000);
+app.listen(3000, () => {
+    console.log('Server is running on port 3000');
+  });
