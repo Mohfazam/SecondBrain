@@ -86,4 +86,6 @@ app.get("/api/v1/secondbraib/:shareLink", (req, res) => {
 });
 app.delete("/api/v1/content", (req, res) => {
 });
-app.listen(3000);
+app.listen(3000, () => {
+    console.log('Server is running on port 3000');
+});
