@@ -14,4 +14,7 @@ export const usermiddleware = (req: Request, res: Response, next: NextFunction) 
         req.userId = decoded.id;
         next();
     }
+    else{
+        res.status(403).json({error: "Unauthorized"});
+    }
 }

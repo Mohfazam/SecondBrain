@@ -2,9 +2,10 @@ import { z } from "zod";
 import express from "express";
 import mongoose from "mongoose"
 import  jwt  from "jsonwebtoken";
-import {UserModel} from "./db";
+import {UserModel, ContentModel} from "./db";
 import bcrypt from "bcrypt";
 import { key } from './config';
+import { usermiddleware } from './middleware';
 
 const env = require("dotenv").config();
 
@@ -47,14 +48,14 @@ app.post("/api/v1/signup", async (req, res) => {
         const username = userSchema.parse(req.body).username;
         const userExist = await UserModel.findOne({username});
         if(userExist){
-            res.status(411).json({Error: "username already exists"});
+            return res.status(411).json({Error: "username already exists"});
         }
         const password = userSchema.parse(req.body).password;
         const hashedPassword = await bcrypt.hash(password, 10);
         await UserModel.create({username, password:hashedPassword});
-    res.status(200).json({message: "User created Successfully"})
+    return res.status(200).json({message: "User created Successfully"})
     }catch(error){
-        res.status(400).json({error});
+        return res.status(400).json({error});
     }
 });
 
@@ -88,9 +89,18 @@ app.post("/api/v1/signin", async (req, res) => {
 });
 
 
-app.post("/api/v1/content", (req, res)=> {
+app.post("/api/v1/content", usermiddleware, async (req, res)=> {
     const title = ContentSchema.parse(req.body).title;
     const Link = ContentSchema.parse(req.body).Link;
+    await ContentModel.create({
+        title, 
+        Link,
+        //@ts-ignore
+         userid: req.userId,
+         tags: [],
+        });
+
+        return res.status(200).json({message:"Content Created Successfully"});
 });
 
 app.post("/api/v1/content", (req, res)=> {
