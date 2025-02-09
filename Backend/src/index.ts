@@ -4,6 +4,7 @@ import mongoose from "mongoose"
 import  jwt  from "jsonwebtoken";
 import {UserModel} from "./db";
 import bcrypt from "bcrypt";
+import { key } from './config';
 
 const env = require("dotenv").config();
 
@@ -17,7 +18,7 @@ mongoose.connect(MONGO_URL)
     console.error("MongoDB connection error:", error);
   });
 
-const key = "Hello_second_brain";
+
 
 // mongoose.connect(env)
 
@@ -32,6 +33,13 @@ const userSchema = z.object({
     password: z.string().min(8, "Password must be at least 8 characters long").max(20, "Password cannot exceed 20 characters").regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/,
             "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
         )
+})
+
+const ContentSchema = z.object({
+    title: z.string().min(3, "Title should be more than 3 letters"),
+    Link: z.string().min(8, "Link must start with HTTP/HTTPS").max(20, "It cannot be blank"),
+    Tags: z.array(z.string().min(3, "tags should be more than 3 Letters")),
+    userId: z.string().min(3, "User Id should be more than 3 letters"),
 })
 
 app.post("/api/v1/signup", async (req, res) => {
@@ -81,7 +89,8 @@ app.post("/api/v1/signin", async (req, res) => {
 
 
 app.post("/api/v1/content", (req, res)=> {
-
+    const title = ContentSchema.parse(req.body).title;
+    const Link = ContentSchema.parse(req.body).Link;
 });
 
 app.post("/api/v1/content", (req, res)=> {
