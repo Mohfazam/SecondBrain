@@ -36,13 +36,8 @@ const userSchema = z.object({
         )
 })
 
-const ContentSchema = z.object({
-    title: z.string().min(3, "Title should be more than 3 letters"),
-    Link: z.string().min(8, "Link must start with HTTP/HTTPS").max(20, "It cannot be blank"),
-    Tags: z.array(z.string().min(3, "tags should be more than 3 Letters")),
-    userId: z.string().min(3, "User Id should be more than 3 letters"),
-})
 
+//@ts-ignore
 app.post("/api/v1/signup", async (req, res) => {
     try{
         const username = userSchema.parse(req.body).username;
@@ -88,10 +83,10 @@ app.post("/api/v1/signin", async (req, res) => {
 
 });
 
-
+//@ts-ignore
 app.post("/api/v1/content", usermiddleware, async (req, res)=> {
-    const title = ContentSchema.parse(req.body).title;
-    const Link = ContentSchema.parse(req.body).Link;
+    const title = req.body.title;
+    const Link = req.body.Link;
     await ContentModel.create({
         title, 
         Link,

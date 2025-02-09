@@ -18,6 +18,8 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const db_1 = require("./db");
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const config_1 = require("./config");
+const middleware_1 = require("./middleware");
 const env = require("dotenv").config();
 const MONGO_URL = process.env.MONGO_URL;
 mongoose_1.default.connect(MONGO_URL)
@@ -27,7 +29,6 @@ mongoose_1.default.connect(MONGO_URL)
     .catch((error) => {
     console.error("MongoDB connection error:", error);
 });
-const key = "Hello_second_brain";
 // mongoose.connect(env)
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
@@ -36,20 +37,21 @@ const userSchema = zod_1.z.object({
     username: zod_1.z.string().min(3, "Username should be more than 3 letters"),
     password: zod_1.z.string().min(8, "Password must be at least 8 characters long").max(20, "Password cannot exceed 20 characters").regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/, "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character")
 });
+//@ts-ignore
 app.post("/api/v1/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const username = userSchema.parse(req.body).username;
         const userExist = yield db_1.UserModel.findOne({ username });
         if (userExist) {
-            res.status(411).json({ Error: "username already exists" });
+            return res.status(411).json({ Error: "username already exists" });
         }
         const password = userSchema.parse(req.body).password;
         const hashedPassword = yield bcrypt_1.default.hash(password, 10);
         yield db_1.UserModel.create({ username, password: hashedPassword });
-        res.status(200).json({ message: "User created Successfully" });
+        return res.status(200).json({ message: "User created Successfully" });
     }
     catch (error) {
-        res.status(400).json({ error });
+        return res.status(400).json({ error });
     }
 }));
 app.post("/api/v1/signin", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -63,7 +65,7 @@ app.post("/api/v1/signin", (req, res) => __awaiter(void 0, void 0, void 0, funct
         if (user) {
             const isPasswordMatch = yield bcrypt_1.default.compare(password, user.password);
             if (isPasswordMatch) {
-                const token = jsonwebtoken_1.default.sign({ username }, key);
+                const token = jsonwebtoken_1.default.sign({ username }, config_1.key);
                 res.status(200).json({
                     Message: "User signed in successfulyy",
                     token: token
@@ -78,8 +80,19 @@ app.post("/api/v1/signin", (req, res) => __awaiter(void 0, void 0, void 0, funct
         res.status(500).json({ Msg: "Internal server error" });
     }
 }));
-app.post("/api/v1/content", (req, res) => {
-});
+//@ts-ignore
+app.post("/api/v1/content", middleware_1.usermiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const title = req.body.title;
+    const Link = req.body.Link;
+    yield db_1.ContentModel.create({
+        title,
+        Link,
+        //@ts-ignore
+        userid: req.userId,
+        tags: [],
+    });
+    return res.status(200).json({ message: "Content Created Successfully" });
+}));
 app.post("/api/v1/content", (req, res) => {
 });
 app.get("/api/v1/secondbraib/:shareLink", (req, res) => {
