@@ -33,17 +33,23 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ContentModel = exports.UserModel = void 0;
+exports.ContentModel = exports.LinkModel = exports.UserModel = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const userSchema = new mongoose_1.Schema({
-    username: { type: String, required: true, unique: true },
-    password: { type: String, required: true }
+const UserSchema = new mongoose_1.Schema({
+    username: { type: String, unique: true },
+    password: String
 });
+exports.UserModel = (0, mongoose_1.model)("User", UserSchema);
 const ContentSchema = new mongoose_1.Schema({
-    title: { type: String, required: true },
-    link: { type: String, required: true },
-    tags: [{ type: String }], // Changed from ObjectId to String
-    userId: { type: mongoose_1.default.Types.ObjectId, ref: "User", required: true }
+    title: String,
+    link: String,
+    tags: [{ type: mongoose_1.default.Types.ObjectId, ref: 'Tag' }],
+    type: String,
+    userId: { type: mongoose_1.default.Types.ObjectId, ref: 'User', required: true },
 });
-exports.UserModel = mongoose_1.default.model("User", userSchema);
-exports.ContentModel = mongoose_1.default.model("Content", ContentSchema);
+const LinkSchema = new mongoose_1.Schema({
+    hash: String,
+    userId: { type: mongoose_1.default.Types.ObjectId, ref: 'User', required: true, unique: true },
+});
+exports.LinkModel = (0, mongoose_1.model)("Links", LinkSchema);
+exports.ContentModel = (0, mongoose_1.model)("Content", ContentSchema);

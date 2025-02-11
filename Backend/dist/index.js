@@ -12,14 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const zod_1 = require("zod");
 const express_1 = __importDefault(require("express"));
-const mongoose_1 = __importDefault(require("mongoose"));
+const utils_1 = require("./utils");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const db_1 = require("./db");
-const bcrypt_1 = __importDefault(require("bcrypt"));
 const config_1 = require("./config");
 const middleware_1 = require("./middleware");
+const cors_1 = __importDefault(require("cors"));
+const mongoose_1 = __importDefault(require("mongoose"));
 const env = require("dotenv").config();
 const MONGO_URL = process.env.MONGO_URL;
 mongoose_1.default.connect(MONGO_URL)
@@ -29,76 +29,143 @@ mongoose_1.default.connect(MONGO_URL)
     .catch((error) => {
     console.error("MongoDB connection error:", error);
 });
-// mongoose.connect(env)
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
-const users = [];
-const userSchema = zod_1.z.object({
-    username: zod_1.z.string().min(3, "Username should be more than 3 letters"),
-    password: zod_1.z.string().min(8, "Password must be at least 8 characters long").max(20, "Password cannot exceed 20 characters").regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/, "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character")
-});
-//@ts-ignore
+app.use((0, cors_1.default)());
 app.post("/api/v1/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // TODO: zod validation , hash the password
+    const username = req.body.username;
+    const password = req.body.password;
     try {
-        const username = userSchema.parse(req.body).username;
-        const userExist = yield db_1.UserModel.findOne({ username });
-        if (userExist) {
-            return res.status(411).json({ Error: "username already exists" });
-        }
-        const password = userSchema.parse(req.body).password;
-        const hashedPassword = yield bcrypt_1.default.hash(password, 10);
-        yield db_1.UserModel.create({ username, password: hashedPassword });
-        return res.status(200).json({ message: "User created Successfully" });
+        yield db_1.UserModel.create({
+            username: username,
+            password: password
+        });
+        res.json({
+            message: "User signed up"
+        });
     }
-    catch (error) {
-        return res.status(400).json({ error });
+    catch (e) {
+        res.status(411).json({
+            message: "User already exists"
+        });
     }
 }));
 app.post("/api/v1/signin", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const username = userSchema.parse(req.body).username;
-        const password = userSchema.parse(req.body).password;
-        const user = yield db_1.UserModel.findOne({ username });
-        if (!user) {
-            res.status(404).json({ Message: "User not found" });
-        }
-        if (user) {
-            const isPasswordMatch = yield bcrypt_1.default.compare(password, user.password);
-            if (isPasswordMatch) {
-                const token = jsonwebtoken_1.default.sign({ username }, config_1.key);
-                res.status(200).json({
-                    Message: "User signed in successfulyy",
-                    token: token
-                });
-            }
-            else {
-                res.status(401).json({ Message: "Incorrect Password" });
-            }
-        }
-    }
-    catch (error) {
-        res.status(500).json({ Msg: "Internal server error" });
-    }
-}));
-//@ts-ignore
-app.post("/api/v1/content", middleware_1.usermiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const title = req.body.title;
-    const Link = req.body.Link;
-    yield db_1.ContentModel.create({
-        title,
-        Link,
-        //@ts-ignore
-        userid: req.userId,
-        tags: [],
+    const username = req.body.username;
+    const password = req.body.password;
+    const existingUser = yield db_1.UserModel.findOne({
+        username,
+        password
     });
-    return res.status(200).json({ message: "Content Created Successfully" });
+    if (existingUser) {
+        const token = jsonwebtoken_1.default.sign({
+            id: existingUser._id
+        }, config_1.JWT_PASSWORD);
+        res.json({
+            token
+        });
+    }
+    else {
+        res.status(403).json({
+            message: "Incorrrect credentials"
+        });
+    }
 }));
-app.post("/api/v1/content", (req, res) => {
-});
-app.get("/api/v1/secondbraib/:shareLink", (req, res) => {
-});
-app.delete("/api/v1/content", (req, res) => {
-});
+app.post("/api/v1/content", middleware_1.userMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const link = req.body.link;
+    const type = req.body.type;
+    yield db_1.ContentModel.create({
+        link,
+        type,
+        title: req.body.title,
+        userId: req.userId,
+        tags: []
+    });
+    res.json({
+        message: "Content added"
+    });
+}));
+app.get("/api/v1/content", middleware_1.userMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // @ts-ignore
+    const userId = req.userId;
+    const content = yield db_1.ContentModel.find({
+        userId: userId
+    }).populate("userId", "username");
+    res.json({
+        content
+    });
+}));
+app.delete("/api/v1/content", middleware_1.userMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const contentId = req.body.contentId;
+    yield db_1.ContentModel.deleteMany({
+        contentId,
+        userId: req.userId
+    });
+    res.json({
+        message: "Deleted"
+    });
+}));
+app.post("/api/v1/brain/share", middleware_1.userMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const share = req.body.share;
+    if (share) {
+        const existingLink = yield db_1.LinkModel.findOne({
+            userId: req.userId
+        });
+        if (existingLink) {
+            res.json({
+                hash: existingLink.hash
+            });
+            return;
+        }
+        const hash = (0, utils_1.random)(10);
+        yield db_1.LinkModel.create({
+            userId: req.userId,
+            hash: hash
+        });
+        res.json({
+            hash
+        });
+    }
+    else {
+        yield db_1.LinkModel.deleteOne({
+            userId: req.userId
+        });
+        res.json({
+            message: "Removed link"
+        });
+    }
+}));
+app.get("/api/v1/brain/:shareLink", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const hash = req.params.shareLink;
+    const link = yield db_1.LinkModel.findOne({
+        hash
+    });
+    if (!link) {
+        res.status(411).json({
+            message: "Sorry incorrect input"
+        });
+        return;
+    }
+    // userId
+    const content = yield db_1.ContentModel.find({
+        userId: link.userId
+    });
+    console.log(link);
+    const user = yield db_1.UserModel.findOne({
+        _id: link.userId
+    });
+    if (!user) {
+        res.status(411).json({
+            message: "user not found, error should ideally not happen"
+        });
+        return;
+    }
+    res.json({
+        username: user.username,
+        content: content
+    });
+}));
 app.listen(3000, () => {
-    console.log('Server is running on port 3000');
+    console.log("Server is running on port 3000");
 });

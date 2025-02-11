@@ -1,4 +1,4 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.key = void 0;
-exports.key = "Hello_second_brain";
+exports.JWT_PASSWORD = void 0;
+exports.JWT_PASSWORD = "Hello_second_brain";
