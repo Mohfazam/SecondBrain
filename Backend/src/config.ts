@@ -1,2 +1,2 @@
 
-export const key = "Hello_second_brain";
+export const JWT_PASSWORD = "Hello_second_brain";
