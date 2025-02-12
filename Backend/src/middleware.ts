@@ -13,7 +13,7 @@ export const userMiddleware = (req: Request, res: Response, next: NextFunction) 
             return;    
         }
         req.userId = (decoded as JwtPayload).id;
-        next()
+        next() 
     } else {
         res.status(403).json({
             message: "You are not logged in"
