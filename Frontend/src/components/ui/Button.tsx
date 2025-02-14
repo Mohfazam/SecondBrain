@@ -3,6 +3,7 @@ export interface ButtonProps{
     size: "sm" | "md" | "lg";
     text: string;
     startIcon: any;
+    endIcon: any;
 }
 
 export const Button = () => {
