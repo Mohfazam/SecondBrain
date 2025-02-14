@@ -4,6 +4,7 @@ export interface ButtonProps{
     text: string;
     startIcon: any;
     endIcon: any;
+    onClick: () => void;
 }
 
 export const Button = () => {
