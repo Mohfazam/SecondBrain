@@ -1,5 +1,7 @@
 
 import {Button} from './components/ui/Button'
+import {Plus} from './icons/PlusIcon'
+
 
 
 function App() {
@@ -7,8 +9,9 @@ function App() {
 
   return (
     <>
-      <Button variant='primary' text='hello_____'></Button>
-      <Button variant='primary' text='World'></Button>
+      <Button startIcon={<Plus size='sm' />} size="sm" variant='primary' text='hello'></Button>
+      <Button startIcon={<Plus size='md' />} size="md" variant='secondary' text='World'></Button>
+      <Button startIcon={<Plus size='lg' />} size="lg" variant='secondary' text='hyderabad'></Button>
     </>
   )
 }
