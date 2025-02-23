@@ -147,7 +147,6 @@ app.get("/api/v1/brain/:shareLink", (req, res) => __awaiter(void 0, void 0, void
         });
         return;
     }
-    // userId
     const content = yield db_1.ContentModel.find({
         userId: link.userId
     });
