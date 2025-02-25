@@ -3,6 +3,7 @@ import { Button } from './components/Button'
 import { PlusIcon } from './icons/PlusIcons'
 import { ShareIcon } from './icons/ShareIcon'
 import { Card } from "./components/Card"
+import { CreateContentModel } from './components/CreateContentModel'
 
 
 
@@ -11,6 +12,7 @@ function App() {
 
 
   return <div className='p-4'>
+    <CreateContentModel open={true}/>
       <div className='flex justify-end gap-4'>
         <Button varient='primary' text='Add content' startIcon={<PlusIcon />}></Button>
         <Button varient='secondary' text='Share Brain' startIcon={<ShareIcon />}></Button>
