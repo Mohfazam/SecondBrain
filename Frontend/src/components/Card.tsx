@@ -17,10 +17,10 @@ export function Card({title, link, type}: cardProps){
                     {title}
                 </div>
                 <div className="flex items-center">
-                    <div className="pr-2 text-gray-500" onClick={() => {
-                        navigator
-                    }}>
-                        <ShareIcon />
+                    <div className="pr-2 text-gray-500">
+                        <a href={link} target="_blank">
+                            <ShareIcon />
+                        </a>
                     </div>
                     <div className="pr-2 text-gray-500">
                         <ShareIcon />
@@ -30,11 +30,11 @@ export function Card({title, link, type}: cardProps){
 
             
             <div className="pt-4">
-            {/* <iframe className="w-full" src="https://www.youtube.com/embed/mc5uTqhGL0U?si=VCC1GwVMurgC7cSY" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe> */}
-
-            <blockquote className="twitter-tweet">
-                <a href="https://t.co/NPbSdjAqaJ"></a>
-            </blockquote> 
+            {type === "Youtube" && <iframe className="w-full" src={link.replace("watch", "embed").replace("?v=", "/")} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>}
+            
+            {type === "x" && <blockquote className="twitter-tweet">
+                    <a href={link.replace("x.com", "twitter.com")}></a> 
+                </blockquote>}
             </div>
             
         </div>
