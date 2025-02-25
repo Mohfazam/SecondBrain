@@ -20,6 +20,10 @@ export function Button({varient, text, startIcon, endIcon}: Buttonprops){
             {startIcon}
         </div>
             {text}
+
+        <div className="pl-2">
+            {endIcon}
+        </div>
         
     </button>
 }
