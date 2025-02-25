@@ -3,7 +3,7 @@ import {Button} from './components/Button'
 import { PlusIcon } from './icons/PlusIcons'
 import { ShareIcon } from './icons/ShareIcon'
 import { Card } from "./components/Card"
-import './App.css'
+import './index.css'
 
 
 
