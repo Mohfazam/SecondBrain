@@ -9,11 +9,13 @@ interface Buttonprops{
 
 const vareintClasses = {
     "primary":"bg-purple-600 text-white",
-    "secondary":"bg-purple-200 text-purple-400"
+    "secondary":"bg-purple-200 text-purple-600"
 };
 
+const defaultStyles = "px- py-2 rounded-md"
+
 export function Button({varient, text, startIcon, endIcon}: Buttonprops){
-    return <button className={vareintClasses[varient]}>
+    return <button className={`${vareintClasses[varient]}${defaultStyles}`}>
         {text}
     </button>
 }
