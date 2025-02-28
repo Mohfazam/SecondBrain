@@ -9,7 +9,7 @@ import { CreateContentModel } from './components/CreateContentModel'
 
 
 function App() {
-  const [modealOpen, setModalOpen] = useState(false);
+  const [modealOpen, setModalOpen] = useState(true);
 
 
   return <div className='p-4'>

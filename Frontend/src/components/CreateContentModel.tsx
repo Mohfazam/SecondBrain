@@ -8,8 +8,10 @@ export function CreateContentModel({ open, onClose }) {
 
             <div className="flex flex-col justify-center ">
                 <span className="bg-white opacity-100 p-4 rounded">
-                    <div className="flex justify-end">
+                    <div className="flex justify-end hover:cursor-pointer">
+                        <div onClick={onClose}>
                         <CrossIcon />
+                        </div>
                     </div>
 
                     <div>
