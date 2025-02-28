@@ -15,7 +15,7 @@ export function CreateContentModel({ open, onClose }) {
                         <Input placeholder={"title"}/>
                         <Input placeholder={"Link"}/>
                     </div>
-                    <div className="m-2">
+                    <div className="flex justify-center">
                     <Button varient="primary" text="Submit" />
                     </div>
                 </span>
