@@ -2,7 +2,10 @@ import { CrossIcon } from "../icons/CrossIcon"
 import { Button } from "./Button"
 import { Input } from "./Input"
 
-export function CreateContentModel({ open, onClose }) {
+export function CreateContentModel({ open, onClose }:{
+    open?: string;
+    onClose?: () => void;
+}) {
     
     return <div>
         {open && <div className="w-screen h-screen bg-slate-500 fixed top-0 left-0 bg-opacity-60 flex justify-center">

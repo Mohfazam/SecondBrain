@@ -1,7 +1,7 @@
 export function Input({ onChange, placeholder }:
     {
-        placeholder: string;
-        onChange: () => void
+        placeholder?: string;
+        onChange?: () => void
     }) {
     return (
         <div>
