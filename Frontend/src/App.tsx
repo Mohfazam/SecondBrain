@@ -1,5 +1,5 @@
 
-import { Dashboard } from './pages/Dashboard'
+import { Dashboard } from './pages/dashboard'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Signin } from './pages/Signin'
 import { Signup } from './pages/Signup'
