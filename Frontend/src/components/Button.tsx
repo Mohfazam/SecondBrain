@@ -6,6 +6,7 @@ interface Buttonprops{
     startIcon?: ReactElement;
     endIcon?: ReactElement;
     onClick?: () => void;
+    fullWidth?: boolean;
 }
 
 const vareintClasses = {
@@ -15,8 +16,8 @@ const vareintClasses = {
 
 const defaultStyles = "px-4 py-2 rounded-md font-light flex items-center"
 
-export function Button({varient, text, startIcon, endIcon, onClick}: Buttonprops){
-    return <button onClick={onClick} className={`${vareintClasses[varient]} ${defaultStyles}`}>
+export function Button({varient, text, startIcon, endIcon, onClick, fullWidth}: Buttonprops){
+    return <button onClick={onClick} className={`${vareintClasses[varient]} ${defaultStyles} ${fullWidth ? " w-full" : " "}`}>
         <div className="pr-2">
             {startIcon}
         </div>
