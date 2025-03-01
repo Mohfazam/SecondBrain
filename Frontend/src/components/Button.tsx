@@ -17,7 +17,7 @@ const vareintClasses = {
 const defaultStyles = "px-4 py-2 rounded-md font-light flex items-center"
 
 export function Button({varient, text, startIcon, endIcon, onClick, fullWidth}: Buttonprops){
-    return <button onClick={onClick} className={`${vareintClasses[varient]} ${defaultStyles} ${fullWidth ? " w-full" : " "}`}>
+    return <button onClick={onClick} className={`${vareintClasses[varient]} ${defaultStyles} ${fullWidth ? " w-full flex justify-center items-center" : " "}`}>
         <div className="pr-2">
             {startIcon}
         </div>
