@@ -5,6 +5,7 @@ interface Buttonprops{
     text: string;
     startIcon?: ReactElement;
     endIcon?: ReactElement;
+    onClick?: () => void;
 }
 
 const vareintClasses = {
@@ -14,8 +15,8 @@ const vareintClasses = {
 
 const defaultStyles = "px-4 py-2 rounded-md font-light flex items-center"
 
-export function Button({varient, text, startIcon, endIcon}: Buttonprops){
-    return <button className={`${vareintClasses[varient]} ${defaultStyles}`}>
+export function Button({varient, text, startIcon, endIcon, onClick}: Buttonprops){
+    return <button onClick={onClick} className={`${vareintClasses[varient]} ${defaultStyles}`}>
         <div className="pr-2">
             {startIcon}
         </div>

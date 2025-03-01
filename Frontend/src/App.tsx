@@ -17,7 +17,9 @@ function App() {
       setModalOpen(false);
     }}/>
       <div className='flex justify-end gap-4'>
-        <Button varient='primary' text='Add content' startIcon={<PlusIcon />}></Button>
+        <Button onClick={() => {
+          setModalOpen(true);
+        }} varient='primary' text='Add content' startIcon={<PlusIcon />}></Button>
         <Button varient='secondary' text='Share Brain' startIcon={<ShareIcon />}></Button>
       </div>
       <div className='flex gap=2'>
