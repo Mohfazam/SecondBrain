@@ -10,7 +10,7 @@ import { Sidebar } from './components/Sidebar'
 
 
 function App() {
-  const [modealOpen, setModalOpen] = useState(true);
+  const [modealOpen, setModalOpen] = useState(false);
 
 
   return <div>
@@ -20,7 +20,7 @@ function App() {
     
 
     {/* Main Content */}
-    <div className='p-4 ml-72 min-h-screen bg-gray-100'>
+    <div className='p-4 ml-72 min-h-screen bg-gray-100 border-12'>
       <CreateContentModel open={modealOpen} onClose={() => {
         setModalOpen(false);
       }} />
