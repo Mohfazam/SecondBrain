@@ -4,6 +4,7 @@ import { PlusIcon } from './icons/PlusIcons'
 import { ShareIcon } from './icons/ShareIcon'
 import { Card } from "./components/Card"
 import { CreateContentModel } from './components/CreateContentModel'
+import { Sidebar } from './components/Sidebar'
 
 
 
@@ -12,10 +13,17 @@ function App() {
   const [modealOpen, setModalOpen] = useState(true);
 
 
-  return <div className='p-4'>
-    <CreateContentModel open={modealOpen} onClose={() => {
-      setModalOpen(false);
-    }}/>
+  return <div>
+    {/* SideBar  */}
+    <div>
+    <Sidebar />
+    </div>
+
+    {/* Main Content */}
+    <div className='p-4 relative'>
+      <CreateContentModel open={modealOpen} onClose={() => {
+        setModalOpen(false);
+      }} />
       <div className='flex justify-end gap-4'>
         <Button onClick={() => {
           setModalOpen(true);
@@ -23,11 +31,12 @@ function App() {
         <Button varient='secondary' text='Share Brain' startIcon={<ShareIcon />}></Button>
       </div>
       <div className='flex gap=2'>
-          <Card type='twitter' link='https://x.com/mohfazam/status/1889201894897422497' title='First HackAthon Win' />
-          <Card type='youtube' link='https://www.youtube.com/watch?v=PxJNNAezY0A' title='Calling U' />
-        </div>
+        <Card type='twitter' link='https://x.com/mohfazam/status/1889201894897422497' title='First HackAthon Win' />
+        <Card type='youtube' link='https://www.youtube.com/watch?v=PxJNNAezY0A' title='Calling U' />
+      </div>
     </div>
-  
+  </div>
+
 }
 
 export default App
