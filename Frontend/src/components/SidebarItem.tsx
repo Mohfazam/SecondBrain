@@ -5,7 +5,7 @@ export function SidebarItem({text, icon}: {
     icon: ReactElement;
 }){
     return(
-        <div className="flex text-gray-700 py-2 cursor-pointer hover:bg-gray-200 rounded-xl pl-2 w-[180px] hover:transition-all duration-700">
+        <div className="flex text-gray-700 py-2 cursor-pointer hover:bg-gray-200 rounded-xl pl-2 w-[180px] hover:transition-all duration-500">
             <div className="pr-2">
             {icon}
             </div>
