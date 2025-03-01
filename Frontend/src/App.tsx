@@ -15,12 +15,12 @@ function App() {
 
   return <div>
     {/* SideBar  */}
-    <div>
+    
     <Sidebar />
-    </div>
+    
 
     {/* Main Content */}
-    <div className='p-4 relative'>
+    <div className='p-4 ml-72 min-h-screen bg-gray-100'>
       <CreateContentModel open={modealOpen} onClose={() => {
         setModalOpen(false);
       }} />
@@ -30,7 +30,7 @@ function App() {
         }} varient='primary' text='Add content' startIcon={<PlusIcon />}></Button>
         <Button varient='secondary' text='Share Brain' startIcon={<ShareIcon />}></Button>
       </div>
-      <div className='flex gap=2'>
+      <div className='flex gap-2'>
         <Card type='twitter' link='https://x.com/mohfazam/status/1889201894897422497' title='First HackAthon Win' />
         <Card type='youtube' link='https://www.youtube.com/watch?v=PxJNNAezY0A' title='Calling U' />
       </div>
