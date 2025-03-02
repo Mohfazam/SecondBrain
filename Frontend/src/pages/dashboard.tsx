@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '../components/Button'
 import { PlusIcon } from '../icons/PlusIcons'
 import { ShareIcon } from '../icons/ShareIcon'
@@ -13,7 +13,11 @@ import { useContent } from '../hooks/useContent'
 export function Dashboard() {
   const [modealOpen, setModalOpen] = useState(false);
 
-  const contents = useContent();
+  const {contents, refresh} = useContent();
+
+  useEffect(() =>{
+    refresh();
+  }, [modealOpen]);
 
 
   return <div>
@@ -33,8 +37,8 @@ export function Dashboard() {
         }} varient='primary' text='Add content' startIcon={<PlusIcon />}></Button>
         <Button varient='secondary' text='Share Brain' startIcon={<ShareIcon />}></Button>
       </div>
-      <div className='flex gap-2'>
-        {contents.map(({ type, link, title }) => (
+      <div className='flex gap-2 flex-wrap'>
+        {contents.map(({ type, link, title }:any) => (
           <Card key={link} type={type} link={link} title={title} />
         ))}
 

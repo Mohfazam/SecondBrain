@@ -30,7 +30,10 @@ export function CreateContentModel({ open, onClose }: any) {
             headers:{
                 "Authorization":localStorage.getItem("token")
             }
+
+            
         });
+        onClose();
 
     }
 
