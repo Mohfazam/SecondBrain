@@ -5,6 +5,7 @@ import { ShareIcon } from '../icons/ShareIcon'
 import { Card } from "../components/Card"
 import { CreateContentModel } from '../components/CreateContentModel'
 import { Sidebar } from "../components/Sidebar"
+import { useContent } from '../hooks/useContent'
 
 
 
@@ -12,12 +13,14 @@ import { Sidebar } from "../components/Sidebar"
 export function Dashboard() {
   const [modealOpen, setModalOpen] = useState(false);
 
+  const contents = useContent();
+
 
   return <div>
     {/* SideBar  */}
-    
+
     <Sidebar />
-    
+
 
     {/* Main Content */}
     <div className='p-4 ml-72 min-h-screen bg-gray-100 border-12'>
@@ -31,8 +34,12 @@ export function Dashboard() {
         <Button varient='secondary' text='Share Brain' startIcon={<ShareIcon />}></Button>
       </div>
       <div className='flex gap-2'>
-        <Card type='twitter' link='https://x.com/mohfazam/status/1889201894897422497' title='First HackAthon Win' />
-        <Card type='youtube' link='https://www.youtube.com/watch?v=PxJNNAezY0A' title='Calling U' />
+        {contents.map(({ type, link, title }) => (
+          <Card key={link} type={type} link={link} title={title} />
+        ))}
+
+
+        {/* <Card type='youtube' link='https://www.youtube.com/watch?v=PxJNNAezY0A' title='Calling U' /> */}
       </div>
     </div>
   </div>
