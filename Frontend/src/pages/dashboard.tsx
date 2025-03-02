@@ -6,6 +6,9 @@ import { Card } from "../components/Card"
 import { CreateContentModel } from '../components/CreateContentModel'
 import { Sidebar } from "../components/Sidebar"
 import { useContent } from '../hooks/useContent'
+import axios from 'axios'
+import { BACKEND_URL } from '../config'
+import { FRONTEND_URL } from '../config'
 
 
 
@@ -35,7 +38,19 @@ export function Dashboard() {
         <Button onClick={() => {
           setModalOpen(true);
         }} varient='primary' text='Add content' startIcon={<PlusIcon />}></Button>
-        <Button varient='secondary' text='Share Brain' startIcon={<ShareIcon />}></Button>
+        <Button varient='secondary' text='Share Brain' startIcon={<ShareIcon />}
+        onClick={async () => {
+          const response = await axios.post(`${BACKEND_URL}/api/v1/brain/share`, {
+            share: true
+          }, {
+            headers: {
+              "Authorization" : localStorage.getItem("token")
+            }
+          });
+          const shareUrl = `${FRONTEND_URL}/share/${response.data.hash}`
+          alert(shareUrl)
+        }}
+        ></Button>
       </div>
       <div className='flex gap-2 flex-wrap'>
         {contents.map(({ type, link, title }:any) => (
