@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react"
+import { useRef } from "react"
 import { Button } from "../components/Button";
 import { Input } from "../components/Input";
 import { BACKEND_URL } from '../config'
@@ -18,7 +18,8 @@ export function Signup() {
                     username: Username,
                     password: Password
                 
-            })
+            });
+            console.log(respone);
             alert("You Have Signed Up!");
         }
         catch(err){
