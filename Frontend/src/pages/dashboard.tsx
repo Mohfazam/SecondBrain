@@ -42,11 +42,11 @@ export function Dashboard() {
         onClick={async () => {
           const response = await axios.post(`${BACKEND_URL}/api/v1/brain/share`, {
             share: true
-          }, {
+          }, { 
             headers: {
               "Authorization" : localStorage.getItem("token")
             }
-          });
+          }); 
           const shareUrl = `${FRONTEND_URL}/share/${response.data.hash}`
           alert(shareUrl)
         }}
